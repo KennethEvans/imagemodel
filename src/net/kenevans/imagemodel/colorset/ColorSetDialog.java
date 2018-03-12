@@ -50,10 +50,11 @@ public class ColorSetDialog extends JDialog
     private static final int DIR_COLS = 40;
     private static final int ACO_INDEX = 0;
     private static final int COLORS_INDEX = 1;
+    private static final int GIMP_INDEX = 2;
     private static final int DEFAULT_QUALITY = 10;
     private static final int DEFAULT_NCOLORS = 24;
     private static String[] outputTypeStrings = {"Photoshop .aco",
-        "Painter .colors"};
+        "Painter .colors", "Gimp .gpl"};
 
     private ImageBrowser browser;
     private BufferedImage image;
@@ -86,6 +87,8 @@ public class ColorSetDialog extends JDialog
                     outputFileTypeCombo.setSelectedIndex(ACO_INDEX);
                 } else if(ext.equalsIgnoreCase("colors")) {
                     outputFileTypeCombo.setSelectedIndex(COLORS_INDEX);
+                } else if(ext.equalsIgnoreCase("gpl")) {
+                    outputFileTypeCombo.setSelectedIndex(GIMP_INDEX);
                 }
             }
         }
@@ -288,12 +291,17 @@ public class ColorSetDialog extends JDialog
             "Photoshop *.aco", "aco");
         FileNameExtensionFilter colorFiles = new FileNameExtensionFilter(
             "Painter *.colors", "colors");
+        FileNameExtensionFilter gimpFiles = new FileNameExtensionFilter(
+            "Gimp *.gpl", "palette");
         chooser.addChoosableFileFilter(acoFiles);
         chooser.addChoosableFileFilter(colorFiles);
+        chooser.addChoosableFileFilter(gimpFiles);
         if(outputFileTypeCombo.getSelectedIndex() == ACO_INDEX) {
             chooser.setFileFilter(acoFiles);
         } else if(outputFileTypeCombo.getSelectedIndex() == COLORS_INDEX) {
             chooser.setFileFilter(colorFiles);
+        } else if(outputFileTypeCombo.getSelectedIndex() == GIMP_INDEX) {
+            chooser.setFileFilter(gimpFiles);
         }
         if(initialFileName != null) {
             File file = new File(initialFileName);
@@ -310,6 +318,8 @@ public class ColorSetDialog extends JDialog
                     outputFileTypeCombo.setSelectedIndex(ACO_INDEX);
                 } else if(ext.equalsIgnoreCase("colors")) {
                     outputFileTypeCombo.setSelectedIndex(COLORS_INDEX);
+                } else if(ext.equalsIgnoreCase("gpl")) {
+                    outputFileTypeCombo.setSelectedIndex(GIMP_INDEX);
                 }
             }
             return fileName;
@@ -360,6 +370,9 @@ public class ColorSetDialog extends JDialog
                 return true;
             } else if(outputType == COLORS_INDEX) {
                 writeColorsFile(image, cmap, file);
+                return true;
+            } else if(outputType == GIMP_INDEX) {
+                writeGimpPaletteFile(image, cmap, file);
                 return true;
             } else {
                 Utils.errMsg("Invalid output type: " + outputType);
@@ -421,7 +434,7 @@ public class ColorSetDialog extends JDialog
     }
 
     /**
-     * Writes an Painter COLORS file.
+     * Writes a Painter COLORS file.
      * 
      * @param image The image to use.
      * @param cmap The CMap to use.
@@ -444,6 +457,49 @@ public class ColorSetDialog extends JDialog
             i++;
             out.printf("R:%d, G:%d, B:%d HV:0.00, SV:0.00, VV:0.00 %s" + LS,
                 rgb[0], rgb[1], rgb[2], "Color " + i);
+        }
+        out.close();
+
+        Utils.infoMsg("Wrote: " + file.getPath() + LS + "nColors=" + nColors
+            + LS + "File size=" + file.length());
+    }
+
+    /**
+     * Writes a Gimp palette file.
+     * 
+     * @param image The image to use.
+     * @param cmap The CMap to use.
+     * @param file The output File to write.
+     * @throws IOException
+     */
+    private void writeGimpPaletteFile(BufferedImage image, CMap cmap, File file)
+        throws IOException {
+        PrintWriter out = new PrintWriter(new FileWriter(file));
+        String ext = Utils.getExtension(file);
+        String name = file.getName();
+        if(ext != null) {
+            int index = name.lastIndexOf('.');
+            if(index != -1) {
+                name = name.substring(0, index);
+            }
+        }
+        // Number of colors
+        int nColors = cmap.vboxes.size();
+        // Write the header
+        out.println("GIMP Palette");
+        out.println("Name: " + name);
+        out.println("#");
+        // Process the colors
+        int[] rgb;
+        int i = 0;
+        for(VBox vbox : cmap.vboxes) {
+            rgb = vbox.avg(false);
+            // DEBUG
+            System.out.printf("%3d %02x %02x %02x" + LS, i, rgb[0], rgb[1],
+                rgb[2]);
+            i++;
+            out.printf("%3d %3d %3d #%02x%02x%02x" + LS, rgb[0], rgb[1], rgb[2],
+                rgb[0], rgb[1], rgb[2]);
         }
         out.close();
 
