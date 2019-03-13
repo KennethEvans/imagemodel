@@ -187,7 +187,7 @@ public class ImageViewer extends JFrame
         // File Save as
         menuFileSaveAs.setText("Save As...");
         menuFileSaveAs.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-            InputEvent.CTRL_MASK));
+            InputEvent.CTRL_DOWN_MASK));
         menuFileSaveAs.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 if(imagePanel != null) {
@@ -202,7 +202,7 @@ public class ImageViewer extends JFrame
         // File Print
         menuFilePrint.setText("Print...");
         menuFilePrint.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,
-            InputEvent.CTRL_MASK));
+            InputEvent.CTRL_DOWN_MASK));
         menuFilePrint.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 if(imagePanel != null) imagePanel.print();
@@ -244,7 +244,7 @@ public class ImageViewer extends JFrame
         // Edit Copy
         menuEditCopy.setText("Copy");
         menuEditCopy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-            InputEvent.CTRL_MASK));
+            InputEvent.CTRL_DOWN_MASK));
         menuEditCopy.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 if(imagePanel != null) imagePanel.copy();
@@ -255,7 +255,7 @@ public class ImageViewer extends JFrame
         // Edit Paste
         menuEditPaste.setText("Paste");
         menuEditPaste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
-            InputEvent.CTRL_MASK));
+            InputEvent.CTRL_DOWN_MASK));
         menuEditPaste.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 if(imagePanel != null) {
@@ -269,7 +269,7 @@ public class ImageViewer extends JFrame
         // Edit Paste and Print
         menuEditPastePrint.setText("Paste and Print");
         menuEditPastePrint.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B,
-            InputEvent.CTRL_MASK));
+            InputEvent.CTRL_DOWN_MASK));
         menuEditPastePrint.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 imagePanel.paste();
@@ -499,7 +499,7 @@ public class ImageViewer extends JFrame
         // Image Scale
         menuImageScale.setText("Scale Image");
         menuImageScale.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F,
-            InputEvent.CTRL_MASK));
+            InputEvent.CTRL_DOWN_MASK));
         menuImageScale.setState(imagePanel.isScaled());
         menuImageScale.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -511,7 +511,7 @@ public class ImageViewer extends JFrame
         // Image Restore
         menuImageRestore.setText("Restore");
         menuImageRestore.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R,
-            InputEvent.CTRL_MASK));
+            InputEvent.CTRL_DOWN_MASK));
         menuImageRestore.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 if(imageModel == null) return;

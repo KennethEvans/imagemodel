@@ -89,7 +89,7 @@ public class IntegerSpinner extends JSpinner
      * @param number
      */
     public void setValue(int number) {
-        Integer intVal = new Integer(number);
+        Integer intVal = Integer.valueOf(number);
         super.setValue(intVal);
     }
 
