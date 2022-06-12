@@ -27,6 +27,7 @@ import javax.imageio.ImageIO;
 import javax.print.PrintService;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -66,7 +67,7 @@ public class ImageBrowser extends JFrame
     private static final boolean INITIALIZE_PATH = false; // For developing
     private static final boolean INITIAL_CROP_ENABLED = true;
     private static final boolean USE_STATUS_BAR = true;
-    private static final String VERSION_STRING = "Image Browser 4.0.0";
+    private static final String VERSION_STRING = "Image Browser 4.1.0";
     // private static final String INITIAL_PATH = "c:/users/evans/Pictures";
     private static final String INITIAL_PATH = "C:/Users/evans/Pictures/Android/Herondance";
     private static final String[] HOME_LOCATIONS = {"HOME", "HOME_PATH"};
@@ -74,7 +75,7 @@ public class ImageBrowser extends JFrame
         "Pictures"};
     private static String[] suffixes = {"jpg", "jpe", "jpeg", "gif", "tif",
         "tiff", "png", "bmp"};
-    
+
     private File lastColorSetFile;
 
     public static enum ControlPanelMode {
@@ -418,6 +419,27 @@ public class ImageBrowser extends JFrame
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 paste();
+            }
+        });
+
+        // Separator
+        toolBar.addSeparator();
+
+        // Print portrait button
+        button = makeToolBarButton("/resources/print_portrait.png", "Portrait",
+            "Portait");
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                printAttributes.add(OrientationRequested.PORTRAIT);
+            }
+        });
+
+        // Print landscape button
+        button = makeToolBarButton("/resources/print_landscape.png",
+            "Landscape", "Landscape");
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                printAttributes.add(OrientationRequested.LANDSCAPE);
             }
         });
 
@@ -1554,7 +1576,7 @@ public class ImageBrowser extends JFrame
     public static String getVersionString() {
         return VERSION_STRING;
     }
-    
+
     /**
      * @return The value of lastColorSetFile.
      */
